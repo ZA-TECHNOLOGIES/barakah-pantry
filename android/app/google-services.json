@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "147615096408",
+    "project_id": "barakah-pantry",
+    "storage_bucket": "barakah-pantry.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:147615096408:android:1e2aa5104b674f78c8742d",
+        "android_client_info": {
+          "package_name": "com.barakah_panatry.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDk2NkaqmnDfPbsFWIfq0_7zqOetqXsgs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

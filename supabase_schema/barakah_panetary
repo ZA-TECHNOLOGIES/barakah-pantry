@@ -1,0 +1,317 @@
+-- =============================================
+-- BARAKAH PANTRY DATABASE SCHEMA
+-- =============================================
+
+-- Enable UUID extension
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+-- =============================================
+-- 1. USERS TABLE (extends Supabase auth.users)
+-- =============================================
+CREATE TABLE public.profiles (
+    id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
+    email TEXT UNIQUE NOT NULL,
+    full_name TEXT,
+    avatar_url TEXT,
+    goals TEXT[] DEFAULT '{}', -- ['eat_sunnah', 'improve_health', 'learn_nutrition', 'cook_family']
+    dietary_preferences TEXT[] DEFAULT '{}',
+    onboarding_completed BOOLEAN DEFAULT FALSE,
+    daily_reminder_enabled BOOLEAN DEFAULT TRUE,
+    reminder_time TIME DEFAULT '08:00:00',
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- =============================================
+-- 2. SUNNAH INGREDIENTS TABLE
+-- =============================================
+CREATE TABLE public.ingredients (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    name TEXT NOT NULL,
+    name_arabic TEXT,
+    slug TEXT UNIQUE NOT NULL,
+    description TEXT,
+    category TEXT NOT NULL, -- 'fruit', 'grain', 'oil', 'dairy', 'meat', 'spice', 'other'
+    is_sunnah BOOLEAN DEFAULT TRUE,
+    sunnah_level TEXT DEFAULT 'explicit', -- 'explicit', 'implied', 'halal_general'
+    benefits TEXT[] DEFAULT '{}',
+    usage_tips TEXT[] DEFAULT '{}',
+    image_url TEXT,
+    icon_url TEXT,
+    nutritional_info JSONB DEFAULT '{}',
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- =============================================
+-- 3. QURAN REFERENCES TABLE
+-- =============================================
+CREATE TABLE public.quran_references (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    ingredient_id UUID REFERENCES public.ingredients(id) ON DELETE CASCADE,
+    surah_name TEXT NOT NULL,
+    surah_number INTEGER NOT NULL,
+    ayah_number INTEGER NOT NULL,
+    arabic_text TEXT,
+    translation TEXT NOT NULL,
+    translator TEXT DEFAULT 'Sahih International',
+    context TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- =============================================
+-- 4. HADITH REFERENCES TABLE
+-- =============================================
+CREATE TABLE public.hadith_references (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    ingredient_id UUID REFERENCES public.ingredients(id) ON DELETE CASCADE,
+    source TEXT NOT NULL, -- 'Bukhari', 'Muslim', 'Tirmidhi', etc.
+    book_name TEXT,
+    hadith_number TEXT,
+    arabic_text TEXT,
+    english_text TEXT NOT NULL,
+    grade TEXT DEFAULT 'Sahih', -- 'Sahih', 'Hasan', 'Daif'
+    narrator TEXT,
+    context TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- =============================================
+-- 5. RECIPES TABLE
+-- =============================================
+CREATE TABLE public.recipes (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    user_id UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
+    title TEXT NOT NULL,
+    description TEXT,
+    slug TEXT UNIQUE NOT NULL,
+    image_url TEXT,
+    prep_time_minutes INTEGER DEFAULT 0,
+    cook_time_minutes INTEGER DEFAULT 0,
+    servings INTEGER DEFAULT 2,
+    difficulty TEXT DEFAULT 'easy', -- 'easy', 'medium', 'hard'
+    category TEXT NOT NULL, -- 'breakfast', 'lunch', 'dinner', 'snack', 'drink', 'dessert'
+    tags TEXT[] DEFAULT '{}', -- ['ramadan', 'quick', 'kids', 'healing']
+    ingredients JSONB NOT NULL, -- [{ingredient_id, name, quantity, unit}]
+    instructions JSONB NOT NULL, -- [{step, description, duration_minutes}]
+    sunnah_benefits TEXT[] DEFAULT '{}',
+    nutritional_info JSONB DEFAULT '{}',
+    is_ai_generated BOOLEAN DEFAULT FALSE,
+    is_approved BOOLEAN DEFAULT FALSE, -- for user-submitted recipes
+    is_featured BOOLEAN DEFAULT FALSE,
+    status TEXT DEFAULT 'pending', -- 'pending', 'approved', 'rejected'
+    view_count INTEGER DEFAULT 0,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- =============================================
+-- 6. RECIPE RATINGS TABLE
+-- =============================================
+CREATE TABLE public.recipe_ratings (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    recipe_id UUID REFERENCES public.recipes(id) ON DELETE CASCADE,
+    user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE,
+    rating INTEGER CHECK (rating >= 1 AND rating <= 5),
+    review TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(recipe_id, user_id)
+);
+
+-- =============================================
+-- 7. USER FAVORITES TABLE
+-- =============================================
+CREATE TABLE public.favorites (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE,
+    recipe_id UUID REFERENCES public.recipes(id) ON DELETE CASCADE,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(user_id, recipe_id)
+);
+
+-- =============================================
+-- 8. COOKING HISTORY TABLE
+-- =============================================
+CREATE TABLE public.cooking_history (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE,
+    recipe_id UUID REFERENCES public.recipes(id) ON DELETE CASCADE,
+    cooked_at TIMESTAMPTZ DEFAULT NOW(),
+    notes TEXT,
+    rating INTEGER CHECK (rating >= 1 AND rating <= 5)
+);
+
+-- =============================================
+-- 9. DAILY TIPS TABLE
+-- =============================================
+CREATE TABLE public.daily_tips (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    title TEXT NOT NULL,
+    content TEXT NOT NULL,
+    ingredient_id UUID REFERENCES public.ingredients(id) ON DELETE SET NULL,
+    hadith_reference TEXT,
+    quran_reference TEXT,
+    image_url TEXT,
+    display_date DATE UNIQUE,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- =============================================
+-- 10. AI RECIPE GENERATIONS (for tracking)
+-- =============================================
+CREATE TABLE public.ai_generations (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE,
+    input_ingredients TEXT[] NOT NULL,
+    meal_type TEXT,
+    generated_recipe JSONB NOT NULL,
+    was_saved BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- =============================================
+-- INDEXES FOR PERFORMANCE
+-- =============================================
+CREATE INDEX idx_ingredients_category ON public.ingredients(category);
+CREATE INDEX idx_ingredients_is_sunnah ON public.ingredients(is_sunnah);
+CREATE INDEX idx_recipes_user_id ON public.recipes(user_id);
+CREATE INDEX idx_recipes_category ON public.recipes(category);
+CREATE INDEX idx_recipes_status ON public.recipes(status);
+CREATE INDEX idx_recipes_is_approved ON public.recipes(is_approved);
+CREATE INDEX idx_favorites_user_id ON public.favorites(user_id);
+CREATE INDEX idx_cooking_history_user_id ON public.cooking_history(user_id);
+CREATE INDEX idx_daily_tips_display_date ON public.daily_tips(display_date);
+
+-- =============================================
+-- ROW LEVEL SECURITY (RLS)
+-- =============================================
+
+-- Enable RLS on all tables
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.ingredients ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.quran_references ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.hadith_references ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.recipes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.recipe_ratings ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.favorites ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.cooking_history ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.daily_tips ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.ai_generations ENABLE ROW LEVEL SECURITY;
+
+-- Profiles policies
+CREATE POLICY "Users can view their own profile" ON public.profiles
+    FOR SELECT USING (auth.uid() = id);
+
+CREATE POLICY "Users can update their own profile" ON public.profiles
+    FOR UPDATE USING (auth.uid() = id);
+
+CREATE POLICY "Users can insert their own profile" ON public.profiles
+    FOR INSERT WITH CHECK (auth.uid() = id);
+
+-- Ingredients policies (public read)
+CREATE POLICY "Anyone can view ingredients" ON public.ingredients
+    FOR SELECT USING (true);
+
+-- Quran references policies (public read)
+CREATE POLICY "Anyone can view quran references" ON public.quran_references
+    FOR SELECT USING (true);
+
+-- Hadith references policies (public read)
+CREATE POLICY "Anyone can view hadith references" ON public.hadith_references
+    FOR SELECT USING (true);
+
+-- Recipes policies
+CREATE POLICY "Anyone can view approved recipes" ON public.recipes
+    FOR SELECT USING (is_approved = true OR user_id = auth.uid());
+
+CREATE POLICY "Users can insert their own recipes" ON public.recipes
+    FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update their own recipes" ON public.recipes
+    FOR UPDATE USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete their own recipes" ON public.recipes
+    FOR DELETE USING (auth.uid() = user_id);
+
+-- Favorites policies
+CREATE POLICY "Users can manage their favorites" ON public.favorites
+    FOR ALL USING (auth.uid() = user_id);
+
+-- Cooking history policies
+CREATE POLICY "Users can manage their cooking history" ON public.cooking_history
+    FOR ALL USING (auth.uid() = user_id);
+
+-- Daily tips policies (public read)
+CREATE POLICY "Anyone can view daily tips" ON public.daily_tips
+    FOR SELECT USING (is_active = true);
+
+-- AI generations policies
+CREATE POLICY "Users can manage their AI generations" ON public.ai_generations
+    FOR ALL USING (auth.uid() = user_id);
+
+-- Recipe ratings policies
+CREATE POLICY "Anyone can view ratings" ON public.recipe_ratings
+    FOR SELECT USING (true);
+
+CREATE POLICY "Users can manage their ratings" ON public.recipe_ratings
+    FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update their ratings" ON public.recipe_ratings
+    FOR UPDATE USING (auth.uid() = user_id);
+
+-- =============================================
+-- FUNCTIONS & TRIGGERS
+-- =============================================
+
+-- Auto-update updated_at timestamp
+CREATE OR REPLACE FUNCTION update_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER update_profiles_updated_at
+    BEFORE UPDATE ON public.profiles
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+
+CREATE TRIGGER update_ingredients_updated_at
+    BEFORE UPDATE ON public.ingredients
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+
+CREATE TRIGGER update_recipes_updated_at
+    BEFORE UPDATE ON public.recipes
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+
+-- Auto-create profile on user signup
+CREATE OR REPLACE FUNCTION handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO public.profiles (id, email, full_name)
+    VALUES (
+        NEW.id,
+        NEW.email,
+        NEW.raw_user_meta_data->>'full_name'
+    );
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER on_auth_user_created
+    AFTER INSERT ON auth.users
+    FOR EACH ROW EXECUTE FUNCTION handle_new_user();
+
+-- Function to get average recipe rating
+CREATE OR REPLACE FUNCTION get_recipe_rating(recipe_uuid UUID)
+RETURNS TABLE(average_rating NUMERIC, total_ratings BIGINT) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        ROUND(AVG(rating)::NUMERIC, 1),
+        COUNT(*)
+    FROM public.recipe_ratings
+    WHERE recipe_id = recipe_uuid;
+END;
+$$ LANGUAGE plpgsql;

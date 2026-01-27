@@ -1,0 +1,267 @@
+-- =============================================
+-- SEED DATA: SUNNAH INGREDIENTS
+-- =============================================
+
+INSERT INTO public.ingredients (name, name_arabic, slug, description, category, is_sunnah, sunnah_level, benefits, usage_tips, image_url) VALUES
+
+-- DATES
+('Dates (Ajwa)', 'تمر عجوة', 'ajwa-dates', 
+ 'The blessed dates from Madinah, specifically mentioned by the Prophet ﷺ for their healing properties.',
+ 'fruit', true, 'explicit',
+ ARRAY['Protection from poison and magic', 'Rich in fiber and natural sugars', 'Excellent source of energy', 'Contains potassium and magnesium'],
+ ARRAY['Eat 7 Ajwa dates in the morning on empty stomach', 'Break your fast with dates', 'Soak overnight for easier digestion'],
+ 'https://example.com/ajwa-dates.jpg'),
+
+-- HONEY
+('Honey', 'عسل', 'honey',
+ 'Pure, raw honey - described in the Quran as containing healing for mankind.',
+ 'other', true, 'explicit',
+ ARRAY['Natural antibacterial properties', 'Soothes sore throat', 'Natural energy source', 'Aids digestion'],
+ ARRAY['Take a spoonful in the morning', 'Mix with warm water and black seed', 'Use instead of sugar in drinks'],
+ 'https://example.com/honey.jpg'),
+
+-- BLACK SEED
+('Black Seed (Nigella Sativa)', 'الحبة السوداء', 'black-seed',
+ 'Habbatus Sauda - The Prophet ﷺ said it is a cure for everything except death.',
+ 'spice', true, 'explicit',
+ ARRAY['Boosts immune system', 'Anti-inflammatory', 'Supports respiratory health', 'Aids digestion'],
+ ARRAY['Take 1 teaspoon of oil daily', 'Add crushed seeds to honey', 'Sprinkle on bread and salads'],
+ 'https://example.com/black-seed.jpg'),
+
+-- OLIVE OIL
+('Olive Oil', 'زيت الزيتون', 'olive-oil',
+ 'Oil from the blessed olive tree, mentioned in the Quran and recommended by the Prophet ﷺ.',
+ 'oil', true, 'explicit',
+ ARRAY['Heart healthy fats', 'Anti-inflammatory', 'Rich in antioxidants', 'Good for skin and hair'],
+ ARRAY['Use for cooking and dressing', 'Apply on skin and hair', 'Take a tablespoon daily'],
+ 'https://example.com/olive-oil.jpg'),
+
+-- BARLEY
+('Barley', 'شعير', 'barley',
+ 'The Prophet ﷺ recommended Talbina (barley porridge) for the sick and grieving.',
+ 'grain', true, 'explicit',
+ ARRAY['Soothes the heart', 'Easy to digest', 'High in fiber', 'Helps reduce cholesterol'],
+ ARRAY['Make Talbina porridge', 'Add to soups and stews', 'Use barley flour in baking'],
+ 'https://example.com/barley.jpg'),
+
+-- MILK
+('Milk', 'لبن', 'milk',
+ 'The Prophet ﷺ loved milk and it was offered to him on the night of Isra.',
+ 'dairy', true, 'explicit',
+ ARRAY['Rich in calcium', 'Good source of protein', 'Strengthens bones', 'Hydrating'],
+ ARRAY['Drink fresh and pure', 'Combine with dates', 'Use in Talbina'],
+ 'https://example.com/milk.jpg'),
+
+-- VINEGAR
+('Vinegar', 'خل', 'vinegar',
+ 'The Prophet ﷺ said what an excellent condiment vinegar is.',
+ 'other', true, 'explicit',
+ ARRAY['Aids digestion', 'Natural preservative', 'May help blood sugar', 'Adds flavor to food'],
+ ARRAY['Use as salad dressing', 'Add to cooking', 'Dilute in water as drink'],
+ 'https://example.com/vinegar.jpg'),
+
+-- WATERMELON
+('Watermelon', 'بطيخ', 'watermelon',
+ 'The Prophet ﷺ used to eat watermelon with fresh dates.',
+ 'fruit', true, 'explicit',
+ ARRAY['Highly hydrating', 'Rich in vitamins', 'Natural sweetness', 'Cooling effect'],
+ ARRAY['Eat with dates for balance', 'Enjoy fresh in summer', 'Great for breaking fast'],
+ 'https://example.com/watermelon.jpg'),
+
+-- PUMPKIN
+('Pumpkin (Gourd)', 'قرع', 'pumpkin',
+ 'Anas reported that the Prophet ﷺ loved pumpkin/gourd.',
+ 'vegetable', true, 'explicit',
+ ARRAY['Rich in vitamins A and C', 'Good for eyes', 'High in fiber', 'Low in calories'],
+ ARRAY['Add to stews and soups', 'Roast with olive oil', 'Make into soup'],
+ 'https://example.com/pumpkin.jpg'),
+
+-- LAMB
+('Lamb', 'لحم ضأن', 'lamb',
+ 'The Prophet ﷺ ate lamb and it was served at important occasions.',
+ 'meat', true, 'explicit',
+ ARRAY['High quality protein', 'Rich in iron', 'Contains B vitamins', 'Good source of zinc'],
+ ARRAY['Cook in stews', 'Grill or roast', 'Pair with rice and vegetables'],
+ 'https://example.com/lamb.jpg'),
+
+-- FIGS
+('Figs', 'تين', 'figs',
+ 'Mentioned in the Quran - Allah swears by the fig in Surah At-Tin.',
+ 'fruit', true, 'explicit',
+ ARRAY['High in fiber', 'Natural sweetness', 'Rich in minerals', 'Good for digestion'],
+ ARRAY['Eat fresh or dried', 'Add to breakfast', 'Pair with nuts'],
+ 'https://example.com/figs.jpg'),
+
+-- OLIVES
+('Olives', 'زيتون', 'olives',
+ 'The blessed fruit from the blessed tree, mentioned multiple times in Quran.',
+ 'fruit', true, 'explicit',
+ ARRAY['Healthy fats', 'Rich in antioxidants', 'Heart healthy', 'Anti-inflammatory'],
+ ARRAY['Eat as snack', 'Add to salads', 'Use in cooking'],
+ 'https://example.com/olives.jpg'),
+
+-- GRAPES
+('Grapes', 'عنب', 'grapes',
+ 'Mentioned in the Quran as one of the fruits of Paradise.',
+ 'fruit', true, 'explicit',
+ ARRAY['Rich in antioxidants', 'Natural sweetness', 'Hydrating', 'Good source of vitamins'],
+ ARRAY['Eat fresh', 'Dry into raisins', 'Add to desserts'],
+ 'https://example.com/grapes.jpg'),
+
+-- POMEGRANATE
+('Pomegranate', 'رمان', 'pomegranate',
+ 'Mentioned in the Quran as a fruit of Paradise.',
+ 'fruit', true, 'explicit',
+ ARRAY['Powerful antioxidants', 'Anti-inflammatory', 'Heart healthy', 'Rich in vitamins'],
+ ARRAY['Eat seeds fresh', 'Make juice', 'Add to salads'],
+ 'https://example.com/pomegranate.jpg'),
+
+-- CUCUMBER
+('Cucumber', 'خيار', 'cucumber',
+ 'The Prophet ﷺ used to eat cucumber with dates.',
+ 'vegetable', true, 'explicit',
+ ARRAY['Highly hydrating', 'Low in calories', 'Cooling effect', 'Good for skin'],
+ ARRAY['Eat with dates', 'Add to salads', 'Great in summer'],
+ 'https://example.com/cucumber.jpg');
+
+-- =============================================
+-- SEED DATA: HADITH REFERENCES
+-- =============================================
+
+INSERT INTO public.hadith_references (ingredient_id, source, hadith_number, english_text, grade, narrator) VALUES
+
+-- Ajwa Dates
+((SELECT id FROM ingredients WHERE slug = 'ajwa-dates'),
+ 'Sahih al-Bukhari', '5445',
+ 'Whoever eats seven Ajwa dates in the morning will not be harmed by poison or magic that day.',
+ 'Sahih', 'Sa''d ibn Abi Waqqas'),
+
+-- Honey
+((SELECT id FROM ingredients WHERE slug = 'honey'),
+ 'Sahih al-Bukhari', '5684',
+ 'Healing is in three things: a gulp of honey, cupping, and branding with fire, but I forbid my followers to use branding.',
+ 'Sahih', 'Ibn Abbas'),
+
+-- Black Seed
+((SELECT id FROM ingredients WHERE slug = 'black-seed'),
+ 'Sahih al-Bukhari', '5688',
+ 'Use this black seed, for it contains a cure for every disease except death.',
+ 'Sahih', 'Abu Hurairah'),
+
+-- Olive Oil
+((SELECT id FROM ingredients WHERE slug = 'olive-oil'),
+ 'Sunan al-Tirmidhi', '1851',
+ 'Eat olive oil and anoint yourselves with it, for it comes from a blessed tree.',
+ 'Hasan', 'Umar ibn al-Khattab'),
+
+-- Barley (Talbina)
+((SELECT id FROM ingredients WHERE slug = 'barley'),
+ 'Sahih al-Bukhari', '5417',
+ 'Talbina soothes the heart of the patient and relieves him of some of his sadness.',
+ 'Sahih', 'Aisha'),
+
+-- Vinegar
+((SELECT id FROM ingredients WHERE slug = 'vinegar'),
+ 'Sahih Muslim', '2051',
+ 'What an excellent condiment vinegar is.',
+ 'Sahih', 'Jabir ibn Abdullah'),
+
+-- Pumpkin
+((SELECT id FROM ingredients WHERE slug = 'pumpkin'),
+ 'Sahih al-Bukhari', '5420',
+ 'The Prophet ﷺ used to love pumpkin.',
+ 'Sahih', 'Anas ibn Malik'),
+
+-- Milk
+((SELECT id FROM ingredients WHERE slug = 'milk'),
+ 'Sahih al-Bukhari', '5610',
+ 'When the Prophet ﷺ was offered milk on the night of Isra, he chose it over wine.',
+ 'Sahih', 'Abu Hurairah');
+
+-- =============================================
+-- SEED DATA: QURAN REFERENCES
+-- =============================================
+
+INSERT INTO public.quran_references (ingredient_id, surah_name, surah_number, ayah_number, arabic_text, translation) VALUES
+
+-- Honey
+((SELECT id FROM ingredients WHERE slug = 'honey'),
+ 'An-Nahl', 16, 69,
+ 'يَخْرُجُ مِن بُطُونِهَا شَرَابٌ مُّخْتَلِفٌ أَلْوَانُهُ فِيهِ شِفَاءٌ لِّلنَّاسِ',
+ 'There emerges from their bellies a drink of varying colors, in which there is healing for people.'),
+
+-- Olives & Olive Oil
+((SELECT id FROM ingredients WHERE slug = 'olive-oil'),
+ 'At-Tin', 95, 1,
+ 'وَالتِّينِ وَالزَّيْتُونِ',
+ 'By the fig and the olive.'),
+
+((SELECT id FROM ingredients WHERE slug = 'olives'),
+ 'An-Nur', 24, 35,
+ 'زَيْتُونَةٍ لَّا شَرْقِيَّةٍ وَلَا غَرْبِيَّةٍ',
+ 'A blessed olive tree, neither of the east nor of the west.'),
+
+-- Figs
+((SELECT id FROM ingredients WHERE slug = 'figs'),
+ 'At-Tin', 95, 1,
+ 'وَالتِّينِ وَالزَّيْتُونِ',
+ 'By the fig and the olive.'),
+
+-- Grapes
+((SELECT id FROM ingredients WHERE slug = 'grapes'),
+ 'An-Nahl', 16, 67,
+ 'وَمِن ثَمَرَاتِ النَّخِيلِ وَالْأَعْنَابِ',
+ 'And from the fruits of the palm trees and grapevines.'),
+
+-- Pomegranate
+((SELECT id FROM ingredients WHERE slug = 'pomegranate'),
+ 'Ar-Rahman', 55, 68,
+ 'فِيهِمَا فَاكِهَةٌ وَنَخْلٌ وَرُمَّانٌ',
+ 'In both of them are fruit and palm trees and pomegranates.'),
+
+-- Dates
+((SELECT id FROM ingredients WHERE slug = 'ajwa-dates'),
+ 'Maryam', 19, 25,
+ 'وَهُزِّي إِلَيْكِ بِجِذْعِ النَّخْلَةِ تُسَاقِطْ عَلَيْكِ رُطَبًا جَنِيًّا',
+ 'And shake toward you the trunk of the palm tree; it will drop upon you ripe, fresh dates.');
+
+-- =============================================
+-- SEED DATA: DAILY TIPS
+-- =============================================
+
+INSERT INTO public.daily_tips (title, content, ingredient_id, hadith_reference, display_date, is_active) VALUES
+
+('The Blessing of Dates', 
+ 'The Prophet ﷺ said: "A house without dates is like a house without food." Start your day with the Sunnah by keeping dates in your home.',
+ (SELECT id FROM ingredients WHERE slug = 'ajwa-dates'),
+ 'Sahih Muslim',
+ CURRENT_DATE,
+ true),
+
+('Honey: Nature''s Healer',
+ 'Allah mentions honey as a healing in the Quran. Consider replacing processed sugar with pure honey in your daily diet.',
+ (SELECT id FROM ingredients WHERE slug = 'honey'),
+ 'Surah An-Nahl 16:69',
+ CURRENT_DATE + INTERVAL '1 day',
+ true),
+
+('Black Seed: The Blessed Cure',
+ 'The Prophet ﷺ said black seed cures everything except death. Add a teaspoon of black seed oil to your morning routine.',
+ (SELECT id FROM ingredients WHERE slug = 'black-seed'),
+ 'Sahih al-Bukhari 5688',
+ CURRENT_DATE + INTERVAL '2 days',
+ true),
+
+('The Blessed Olive Tree',
+ 'Olive oil comes from a blessed tree. Use it for cooking, dressing salads, and even for your skin and hair.',
+ (SELECT id FROM ingredients WHERE slug = 'olive-oil'),
+ 'Sunan al-Tirmidhi 1851',
+ CURRENT_DATE + INTERVAL '3 days',
+ true),
+
+('Talbina for the Heart',
+ 'When someone in the family is ill or grieving, prepare Talbina (barley porridge with honey and milk). It soothes the heart.',
+ (SELECT id FROM ingredients WHERE slug = 'barley'),
+ 'Sahih al-Bukhari 5417',
+ CURRENT_DATE + INTERVAL '4 days',
+ true);
